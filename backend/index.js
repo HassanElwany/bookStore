@@ -1,17 +1,20 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import { Book } from "./models/bookModel";
+import Book from "./models/bookModel.js";
 
 dotenv.config();
+
+const app = express();
+
+//parsing requests body
+app.use(express.json());
 
 const port = process.env.PORT || 3001;
 // password of mongo atlas data
 const dbPass = process.env.MONGOPASS;
 //url data connection
 const mongoDBURL = `mongodb+srv://hassan:${dbPass}@books-store.8s139ny.mongodb.net/books-collection?retryWrites=true&w=majority`;
-
-const app = express();
 
 app.get("/", (req, res) => {
   console.log(req);
@@ -20,7 +23,7 @@ app.get("/", (req, res) => {
 
 //Saving a new book Route
 
-app.post("./books", async (req, res) => {
+app.post("/books", async (req, res) => {
   try {
     if (!req.body.title || !req.body.author || !req.body.publishYear) {
       return res.status(400).send({
@@ -32,8 +35,35 @@ app.post("./books", async (req, res) => {
       author: req.body.author,
       publishYear: req.body.publishYear,
     };
+    const book = await Book.create(newBook);
+
+    return res.status(201).send(book);
   } catch (error) {
     console.log(error.message);
+  }
+});
+
+//get all books from database route
+app.get("/books", async (req, res) => {
+  try {
+    const books = await Book.find({});
+    return res.status(200).json({
+      count: books.length,
+      data: books,
+    });
+  } catch (e) {
+    console.log(e.message);
+  }
+});
+
+//get book by id
+app.get("/books/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const book = await Book.findById(id);
+    return res.status(200).json(book);
+  } catch (e) {
+    console.log(e.message);
   }
 });
 

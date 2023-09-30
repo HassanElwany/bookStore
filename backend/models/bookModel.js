@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-const { Schema } = mongoose;
-
 const bookSchema = mongoose.Schema(
   {
     title: {
@@ -21,8 +19,6 @@ const bookSchema = mongoose.Schema(
     timestamps: true,
   }
 );
-
 const Book = mongoose.model("Book", bookSchema);
 
 export default Book;
-d;
