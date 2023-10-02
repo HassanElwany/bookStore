@@ -9,18 +9,21 @@ dotenv.config();
 
 const app = express();
 
+//cors middle ware
+app.use(cors());
+
 //parsing requests body
 app.use(express.json());
 //using express router
 app.use("/books", booksRoute);
-//cors middle ware
-app.use(
-  cors({
-    origin: "http://localhost:5001",
-    methods: "GET, PUT, POST,DELETE",
-    allowedHeaders: "Content-Type",
-  })
-);
+
+// app.use(
+//   cors({
+//     origin: "http://localhost:5001",
+//     methods: "GET, PUT, POST,DELETE",
+//     allowedHeaders: "Content-Type",
+//   })
+// );
 
 const port = process.env.PORT || 3001;
 
